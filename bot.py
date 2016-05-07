@@ -22,7 +22,12 @@ def get_data(req):
 	resp = requests.get(URL)
 	bs4 = BeautifulSoup(resp.content, 'html.parser')
 
-	table = bs4.find('table')
+	table = bs4.find_all('table')
+
+	if len(table) == 0:
+		return [], [], [], [], [], False
+
+	table = table[len(table) - 1]
 
 	song_names = []
 	meta_infos = []
@@ -49,7 +54,7 @@ def get_data(req):
 		# href = 'href://' + a['href']
 		# keyboard.append([InlineKeyboardButton(text=text, callback_data='alert')])
 
-	return song_names, meta_infos, artist_names, song_links, keyboard
+	return song_names, meta_infos, artist_names, song_links, keyboard, True
 
 def show_lyriqs(msg, chat_id):
 	msg = msg.split('|')
@@ -82,23 +87,17 @@ def handle(msg):
 		show_lyriqs(message[5:], chat_id)
 		return
 	req = generate_string(message)
-	song_names, meta_infos, artist_names, song_links, keyboard = get_data(req)
+	song_names, meta_infos, artist_names, song_links, keyboard, found = get_data(req)
+
+	if not found:
+		hide_keyboard = {'hide_keyboard' : True}
+		text = 'Unfortunately, your search returned *no result*.\n Try to _check spelling_ or _compose less restrictive search query_'
+		bot.sendMessage(chat_id, text, reply_markup=hide_keyboard, parse_mode="markdown")
+		return
+		
 
 	show_keyboard = {'keyboard' : keyboard}
 	bot.sendMessage(chat_id, 'Choose the song you want',reply_markup=show_keyboard)
-
-	# markup = InlineKeyboardMarkup(inline_keyboard = [
-	#	[InlineKeyboardButton(text = 'Song1', callback_data = 'song1')], 
-	#	[InlineKeyboardButton(text = 'Song2', callback_data = 'song2')],
-	#	[InlineKeyboardButton(text = 'Song3', callback_data = 'song3')],
-	#	[InlineKeyboardButton(text = 'Song4', callback_data = 'song4')],
-	#	[InlineKeyboardButton(text = 'Song5', callback_data = 'song5')],
-	# ])
-
-	
-	# bot.sendMessage(chat_id, 'Choose the song you want',reply_markup=markup)
-
-
 
 ACCESS_TOKEN = '226162312:AAFCLYFSBaMwaHsV5LWsmkNIDDNKKlP4yeM'
 
