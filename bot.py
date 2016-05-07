@@ -83,6 +83,11 @@ def handle(msg):
 	pprint.pprint('\n')
 	chat_id = msg['chat']['id']
 	message = msg['text']
+	if '/start' in message:
+		hide_keyboard = {'hide_keyboard' : True}
+                text = 'Hi, :raised_hand::smiley:. I\'m Libretto. Just type the *name* or *artist name* to find the lyrics you want'
+                bot.sendMessage(chat_id, text, reply_markup=hide_keyboard, parse_mode="markdown")
+
 	if '. - ' in message:
 		show_lyriqs(message[5:], chat_id)
 		return
@@ -97,7 +102,7 @@ def handle(msg):
 		
 
 	show_keyboard = {'keyboard' : keyboard}
-	bot.sendMessage(chat_id, 'Choose the song you want',reply_markup=show_keyboard)
+	bot.sendMessage(chat_id, 'Choose the lyriqs you need, from below',reply_markup=show_keyboard)
 
 ACCESS_TOKEN = '226162312:AAFCLYFSBaMwaHsV5LWsmkNIDDNKKlP4yeM'
 
