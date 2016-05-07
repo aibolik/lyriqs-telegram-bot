@@ -1,1 +1,1 @@
-web: python bot.py PORT=8080
+web: python bot.py 8080
