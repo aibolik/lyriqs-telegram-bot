@@ -82,11 +82,12 @@ def handle(msg):
 	pprint.pprint(msg)
 	pprint.pprint('\n')
 	chat_id = msg['chat']['id']
-	if 'entities' in msg:
+	message = msg['text']
+	if '/start' in message:
 		# Bot Command
 		print('Bot command')
 		hide_keyboard = {'hide_keyboard' : True}
-                text = 'Hi, :raised_hand::smiley:. I\'m Libretto. Just type the *name* or *artist name* to find the lyrics you want'
+                text = 'Hi, :raised_hand::smiley:. Im Libretto. Just type the *name* or *artist name* to find the lyrics you want'
                 bot.sendMessage(chat_id, text, reply_markup=hide_keyboard, parse_mode="markdown")
 		return
 
